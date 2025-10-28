@@ -14,6 +14,7 @@ namespace NetKubernetes.Models
         public required decimal Preco { get; set; }
         public string? Imagem { get; set; }
         public DateTime DataCriacao { get; set; }
+        public Guid UsuarioId { get; set; }
 
     }
 }

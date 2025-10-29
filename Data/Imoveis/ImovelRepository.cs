@@ -36,22 +36,29 @@ namespace NetKubernetes.Data.Imoveis
 
         public void DeleteImovel(int id)
         {
-            throw new NotImplementedException();
+            var imovel = _contexto.Imoveis!.FirstOrDefault(i => i.Id == id);
+
+            _contexto.Imoveis!.Remove(imovel!);        
+
+
         }
 
         public IEnumerable<Imovel> ListarTodos()
         {
-            throw new NotImplementedException();
+            
+            return _contexto.Imoveis!.ToList();
         }
 
         public Imovel? ObterImovelPorId(int id)
         {
-            throw new NotImplementedException();
+            return _contexto.Imoveis!.FirstOrDefault(i => i.Id == id);
         }
 
         public bool SaveChanges()
         {
-            throw new NotImplementedException();
+            return _contexto.SaveChanges() >= 0;
         }
+
+        
     }
 }

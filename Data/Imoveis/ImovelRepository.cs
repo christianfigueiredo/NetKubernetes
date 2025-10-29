@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using NetKubernetes.Models;
 using NetKubernetes.Token;
 
@@ -9,20 +10,27 @@ namespace NetKubernetes.Data.Imoveis
     {
         private readonly AppDbContext _contexto;
         private readonly IUsuarioSessao _usuarioSessao;
+        private readonly UserManager<Usuario> _userManager;
         public ImovelRepository(
             AppDbContext contexto,
-            IUsuarioSessao usuarioSessao
+            IUsuarioSessao usuarioSessao,
+            UserManager<Usuario> userManager
             )
         
             {
                  _contexto = contexto;
                  _usuarioSessao = usuarioSessao;
+                 _userManager = userManager;
                 
             }
-        public void AdicionarImovel(Imovel imovel)
+        public async Task AdicionarImovel(Imovel imovel)
         {
+            var usuario = await _userManager.FindByNameAsync(_usuarioSessao.ObterUsuarioSessao());
+
             imovel.DataCriacao = DateTime.Now;
-            //imovel.UsuarioId = _usuarioSessao.ObterUsuarioSessao();
+            imovel.UsuarioId = Guid.Parse(usuario!.Id);
+
+            await _contexto.Imoveis!.AddAsync(imovel);
             
         }
 

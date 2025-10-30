@@ -30,19 +30,55 @@ namespace NetKubernetes.Data.Usuarios
             _context = context;
             _usuarioSessao = usuarioSessao;
         }
-        public Task<UsuarioResponseDto> Login(UsuarioLoginRequestDto request)
+
+        private UsuarioResponseDto TransformerUserToUserDto(Usuario usuario)
         {
-            throw new NotImplementedException();
+            return new UsuarioResponseDto
+            {
+                Id = usuario.Id,
+                Nome = usuario.Nome,
+                Sobrenome = usuario.Sobrenome,
+                Email = usuario.Email,
+                UserName = usuario.UserName,
+                Token = _jwtGerador.GerarToken(usuario)
+            };
         }
 
-        public Task<UsuarioResponseDto> ObterUsuario()
+        public async Task<UsuarioResponseDto> Login(UsuarioLoginRequestDto request)
         {
-            throw new NotImplementedException();
+            var usuario = await _userManager.FindByEmailAsync(request.Email!);
+            await _signInManager.CheckPasswordSignInAsync(usuario!, request.Senha!, false);
+            var usuarioDto = TransformerUserToUserDto(usuario!);
+            return usuarioDto;
         }
 
-        public Task<UsuarioResponseDto> RegistrarUsuario(UsuarioRegistroRequestDto request)
+        public async Task<UsuarioResponseDto> ObterUsuario()
         {
-            throw new NotImplementedException();
+            var usuario = await _userManager.FindByNameAsync(_usuarioSessao.ObterUsuarioSessao());
+            var usuarioDto = TransformerUserToUserDto(usuario!);
+            return usuarioDto;
+        }
+
+        public async Task<UsuarioResponseDto> RegistrarUsuario(UsuarioRegistroRequestDto request)
+        {
+            var usuario = new Usuario
+            {
+                Nome = request.Nome,
+                Sobrenome = request.Sobrenome,
+                Telefone = request.Telefone,
+                Email = request.Email,
+                UserName = request.UserName
+            };
+
+            var resultado = await _userManager.CreateAsync(usuario, request.Senha!);
+
+            if (resultado.Succeeded)
+            {
+                var usuarioDto = TransformerUserToUserDto(usuario);
+                return usuarioDto;
+            }
+
+            throw new Exception("Erro ao registrar usuário");
         }
     }
 }

@@ -39,6 +39,15 @@ namespace NetKubernetes.Data;
                         Preco = 300000.00m,
                         Tipo = "Apartamento",
                         ImagemUrl = "https://example.com/apartamento-centro.jpg"
+                    },
+                    new Imovel
+                    {
+                        Nome = "Chácara com Piscina",
+                        Descricao = "Chácara espaçosa com piscina e área de lazer",
+                        Endereco = "Estrada Rural, 789",
+                        Preco = 800000.00m,
+                        Tipo = "Chácara",
+                        ImagemUrl = "https://example.com/chacara-piscina.jpg"
                     }
                 );
             }

@@ -18,5 +18,7 @@ namespace NetKubernetes.Models
         public string? ImagemUrl { get; set; }
         public string? Descricao { get; set; }
         public DateTime DataCriacao { get; set; }
+        public Guid? UsuarioId { get; set; }
+
     }
 }

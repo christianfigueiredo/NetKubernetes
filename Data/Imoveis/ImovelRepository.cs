@@ -1,5 +1,7 @@
+using System.Net;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using NetKubernetes.Middleware;
 using NetKubernetes.Models;
 using NetKubernetes.Token;
 
@@ -21,6 +23,18 @@ namespace NetKubernetes.Data.Imoveis
         public async Task AddImovelAsync(Imovel imovel)
         {
             var usuario = await _userManager.FindByNameAsync(_usuarioSessao.ObterUsuarioSessao());
+
+            if (usuario is null)
+            {
+                throw new MiddlewareException(HttpStatusCode.Unauthorized, 
+                                            new { Mensagem = "Usuário nao encontrado" });
+            }
+
+            if (imovel is null)
+            {
+                throw new MiddlewareException(HttpStatusCode.BadRequest, 
+                                            new { Mensagem = "Imovel nao encontrado" });
+            }
 
             imovel.DatadeCriacao = DateTime.Now;
             imovel.UsuarioId = Guid.Parse(usuario!.Id);     

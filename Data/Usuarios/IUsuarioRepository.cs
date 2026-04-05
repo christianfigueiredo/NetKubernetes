@@ -1,5 +1,4 @@
 using NetKubernetes.Dtos.UsuariosDtos;
-using NetKubernetes.Models;
 
 namespace NetKubernetes.Data.Usuarios
 {
